@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Анимация плавного переливания градиента */
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Фон с градиентной анимацией */
+.gradient-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(-45deg, #f55c61, #ca7660, #e25bbc, #6a4bb3);
+  background-size: 300% 300%;
+  animation: gradientBG 15s ease infinite;
+  z-index: -1; /* Чтобы фон находился позади всего контента */
+}
