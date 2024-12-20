@@ -1,4 +1,4 @@
-function FormInput({ type, label, placeholder, value, onChange }) {
+  function FormInput({ type, label, placeholder, value, onChange, name }) {
     return (
       <label className="form-control w-full mb-2">
         <div className="label">
@@ -9,6 +9,7 @@ function FormInput({ type, label, placeholder, value, onChange }) {
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          name={name}
           className="input input-bordered w-full"
         />
       </label>

@@ -1,45 +1,57 @@
 import { Link } from "react-router-dom";
 import FormInput from "../components/FormInput";
 import { useState } from "react";
-// toast
+import GradientBackground from "../components/GradientBackground";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import GradientBackground from "../components/GradientBackground";
+
 function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [repeatpassword, setRepeatPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
     const trimmedPassword = password.trim();
-    const trimmedRepeatPassword = repeatpassword.trim();
+    const trimmedRepeatPassword = repeatPassword.trim();
+
     if (
       !trimmedName ||
       !trimmedEmail ||
       !trimmedPassword ||
       !trimmedRepeatPassword
     ) {
-      toast.warning("NO NO");
+      toast.warning("Iltimos, barcha maydonlarni to‘ldiring!");
       return;
     }
+
     if (trimmedPassword.length < 6) {
-      toast.error("Parol kamida 6 ta belgidan iborat bo'lishi kerak!");
+      toast.error("Parol kamida 6 ta belgidan iborat bo‘lishi kerak!");
       return;
     }
+
     if (trimmedPassword !== trimmedRepeatPassword) {
-      toast.error("parollar mos kelmaydi!");
+      toast.error("Parollar mos emas!");
       return;
     }
-    // check if there is letter
+
     const containsLetter = /[a-zA-Z]/.test(trimmedPassword);
     if (!containsLetter) {
-      toast.error("Parolda kamida bitta harf bo'lishi kerak");
+      toast.error("Parolda kamida bitta harf bo‘lishi kerak!");
       return;
     }
+
+    console.log("Yangi foydalanuvchi:", {
+      name: trimmedName,
+      email: trimmedEmail,
+    });
+    toast.success("Muvaffaqiyatli ro‘yxatdan o‘tildi!");
   };
+
   return (
     <>
       <GradientBackground />
@@ -76,7 +88,7 @@ function Register() {
             type="password"
             placeholder="Repeat password"
             label="Repeat password"
-            value={repeatpassword}
+            value={repeatPassword}
             onChange={(e) => setRepeatPassword(e.target.value)}
           />
           <div className="mt-5">
@@ -95,4 +107,5 @@ function Register() {
     </>
   );
 }
+
 export default Register;
