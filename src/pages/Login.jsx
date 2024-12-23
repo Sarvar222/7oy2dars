@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FormInput from "../components/FormInput";
 import { useState } from "react";
 import GradientBackground from "../components/GradientBackground";
@@ -8,19 +8,22 @@ import "react-toastify/dist/ReactToastify.css";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate(); // Хук для навигации
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const trimmedEmail = email.trim();
-    const trimmedPassword = password.trim();
-
-    if (!trimmedEmail || !trimmedPassword) {
-      toast.warning("Iltimos, barcha maydonlarni to‘ldiring!");
+    if (!email.trim() || !password.trim()) {
+      toast.warning("Iltimos, barcha maydonlarni to'ldiring!");
       return;
     }
 
-    console.log("Foydalanuvchi ma'lumotlari:", { email: trimmedEmail });
-    toast.success("Muvaffaqiyatli login qilindi!");
+    // Симуляция успешного входа
+    console.log("User logged in:", { email });
+    toast.success("Siz muvaffaqiyatli tizimga kirdingiz!");
+
+    setTimeout(() => {
+      navigate("/"); // Перенаправляем на Home
+    }, 1500);
   };
 
   return (
