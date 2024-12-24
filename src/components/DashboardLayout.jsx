@@ -49,7 +49,7 @@ function DashboardLayout({ user, children }) {
           <div className="bg-gray-600 w-24 h-24 flex items-center justify-center text-xl font-bold rounded-full overflow-hidden mx-auto">
             <img
               src="../public/images.png"
-              alt="User Avatar"
+              alt="....."
               className="w-full h-full object-cover"
             />
           </div>

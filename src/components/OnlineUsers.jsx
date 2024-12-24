@@ -7,7 +7,7 @@ function OnlineUsers({ users }) {
           <li key={user.id} className="flex items-center space-x-3">
             <img
               src="../public/images.png"
-              alt="User Avatar"
+              alt="....."
               className="w-8 h-8 rounded-full"
             />
             <span>{user.name}</span>
