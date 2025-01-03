@@ -14,15 +14,22 @@ export const action = async ({ request }) => {
 function Login() {
   const { loginWithEmailAndPassword } = useLogin();
   const data = useActionData();
+
   useEffect(() => {
     if (data) {
       loginWithEmailAndPassword(data.email, data.password);
     }
   }, [data]);
+
   return (
-    <div className="h-screen grid place-items-center w-full">
-      <Form method="post" className="max-w-96 mx-auto w-full">
-        <h2 className="text-4xl font-bold text-center mb-5 uppercase">Login</h2>
+    <div className="h-screen grid place-items-center w-full bg-gray-100">
+      <Form
+        method="post"
+        className="max-w-md mx-auto w-full bg-white p-6 shadow-md rounded-md"
+      >
+        <h2 className="text-4xl font-bold text-center mb-5 uppercase text-gray-700">
+          Login
+        </h2>
         <FormInput
           type="email"
           placeholder="Email"
@@ -32,24 +39,21 @@ function Login() {
         <FormInput
           type="password"
           placeholder="Password"
-          lebel=" Password"
+          lebel="Password"
           name="password"
         />
 
-        <div className="mt-5 ">
-          <button
-            className="btn
-   btn-neutral btn-block"
-          >
+        <div className="mt-5">
+          <button className="btn btn-neutral btn-block bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">
             Login
           </button>
         </div>
         <div className="my-5 text-center">
-          <p>
+          <p className="text-gray-600">
             Do not have an account?{" "}
             <Link
               to="/register"
-              className="link link-primary text-black font-semibold text-lg"
+              className="link link-primary text-blue-500 font-semibold text-lg hover:underline"
             >
               Register
             </Link>

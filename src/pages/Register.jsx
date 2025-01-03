@@ -11,18 +11,24 @@ export const action = async ({ request }) => {
   const password = form.get("password");
   return { displayName, email, password };
 };
+
 function Register() {
   const { registerWithEmailAndPassword } = useRegister();
   const data = useActionData();
+
   useEffect(() => {
     if (data) {
       registerWithEmailAndPassword(data.displayName, data.email, data.password);
     }
   }, [data]);
+
   return (
-    <div className="h-screen grid place-items-center w-full ">
-      <Form method="post" className="max-w-96 mx-auto w-full">
-        <h2 className="text-4xl font-bold text-center mb-5 uppercase">
+    <div className="h-screen grid place-items-center w-full bg-gray-100">
+      <Form
+        method="post"
+        className="max-w-md mx-auto w-full bg-white p-6 shadow-md rounded-md"
+      >
+        <h2 className="text-4xl font-bold text-center mb-5 uppercase text-gray-700">
           Register
         </h2>
         <FormInput
@@ -40,28 +46,25 @@ function Register() {
         <FormInput
           type="password"
           placeholder="Password"
-          lebel=" Password"
+          lebel="Password"
           name="password"
         />
         <FormInput
           type="password"
-          placeholder=" Repeat Password"
-          lebel="Password"
+          placeholder="Repeat Password"
+          lebel="Repeat Password"
         />
-        <div className="mt-5 ">
-          <button
-            className="btn
-     btn-neutral btn-block"
-          >
+        <div className="mt-5">
+          <button className="btn btn-neutral btn-block bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">
             Register
           </button>
         </div>
         <div className="my-5 text-center">
-          <p>
+          <p className="text-gray-600">
             Already have an account?{" "}
             <Link
               to="/Login"
-              className="link link-primary text-black text-lg font-semibold"
+              className="link link-primary text-blue-500 font-semibold text-lg hover:underline"
             >
               Login
             </Link>
