@@ -1,73 +1,62 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import FormInput from "../components/FormInput";
-import { useState } from "react";
-import GradientBackground from "../components/GradientBackground";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { Form, Link, useActionData } from "react-router-dom";
+import { useLogin } from "../hooks/useLogin";
+
+// action
+export const action = async ({ request }) => {
+  const form = await request.formData();
+  const email = form.get("email");
+  const password = form.get("password");
+  return { email, password };
+};
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // Хук для навигации
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!email.trim() || !password.trim()) {
-      toast.warning("Iltimos, barcha maydonlarni to'ldiring!");
-      return;
+  const { loginWithEmailAndPassword } = useLogin();
+  const data = useActionData();
+  useEffect(() => {
+    if (data) {
+      loginWithEmailAndPassword(data.email, data.password);
     }
-
-    // Симуляция успешного входа
-    console.log("User logged in:", { email });
-    toast.success("Siz muvaffaqiyatli tizimga kirdingiz!");
-
-    setTimeout(() => {
-      navigate("/"); // Перенаправляем на Home
-    }, 1500);
-  };
-
+  }, [data]);
   return (
-    <>
-      <GradientBackground />
-      <div className="h-screen grid place-items-center w-full font-semibold">
-        <form
-          onSubmit={handleSubmit}
-          className="max-w-80 md:max-w-96 mx-auto w-full"
-        >
-          <h2 className="text-2xl md:text-3xl text-center font-bold mb-5">
+    <div className="h-screen grid place-items-center w-full">
+      <Form method="post" className="max-w-96 mx-auto w-full">
+        <h2 className="text-4xl font-bold text-center mb-5 uppercase">Login</h2>
+        <FormInput
+          type="email"
+          placeholder="Email"
+          lebel="Enter your email"
+          name="email"
+        />
+        <FormInput
+          type="password"
+          placeholder="Password"
+          lebel=" Password"
+          name="password"
+        />
+
+        <div className="mt-5 ">
+          <button
+            className="btn
+   btn-neutral btn-block"
+          >
             Login
-          </h2>
-          <FormInput
-            type="email"
-            placeholder="Email"
-            label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <FormInput
-            type="password"
-            placeholder="Password"
-            label="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <div className="my-5">
-            <button
-              type="submit"
-              className="btn btn-neutral btn-block text-lg md:text-xl btn-sm md:btn-md"
+          </button>
+        </div>
+        <div className="my-5 text-center">
+          <p>
+            Do not have an account?{" "}
+            <Link
+              to="/register"
+              className="link link-primary text-black font-semibold text-lg"
             >
-              Login
-            </button>
-          </div>
-          <div className="text-center">
-            <Link className="link" to="/register">
               Register
             </Link>
-          </div>
-        </form>
-        <ToastContainer />
-      </div>
-    </>
+          </p>
+        </div>
+      </Form>
+    </div>
   );
 }
 

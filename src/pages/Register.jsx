@@ -1,91 +1,74 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 import FormInput from "../components/FormInput";
-import { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import GradientBackground from "../components/GradientBackground";
+import { Form, Link, useActionData } from "react-router-dom";
+import { useRegister } from "../hooks/useRegister";
 
+// action
+export const action = async ({ request }) => {
+  const form = await request.formData();
+  const displayName = form.get("name");
+  const email = form.get("email");
+  const password = form.get("password");
+  return { displayName, email, password };
+};
 function Register() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
-  const navigate = useNavigate(); // Хук для навигации
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const trimmedEmail = email.trim();
-    const trimmedPassword = password.trim();
-    const trimmedRepeatPassword = repeatPassword.trim();
-
-    if (!trimmedEmail || !trimmedPassword || !trimmedRepeatPassword) {
-      toast.warning("Iltimos, barcha maydonlarni to'ldiring!");
-      return;
+  const { registerWithEmailAndPassword } = useRegister();
+  const data = useActionData();
+  useEffect(() => {
+    if (data) {
+      registerWithEmailAndPassword(data.displayName, data.email, data.password);
     }
-
-    if (trimmedPassword.length < 6) {
-      toast.error("Parol kamida 6 ta belgidan iborat bo'lishi kerak!");
-      return;
-    }
-
-    if (trimmedPassword !== trimmedRepeatPassword) {
-      toast.error("Parollar mos kelmaydi!");
-      return;
-    }
-
-    console.log("User registered:", { email });
-    toast.success("Roʻyxatdan oʻtish muvaffaqiyatli oʻtdi!");
-
-    setTimeout(() => {
-      navigate("/"); // Перенаправляем на Home
-    }, 1500);
-  };
-
+  }, [data]);
   return (
-    <>
-      <GradientBackground />
-      <div className="h-screen grid place-items-center w-full font-semibold">
-        <form
-          onSubmit={handleSubmit}
-          className="max-w-80 md:max-w-96 mx-auto w-full"
-        >
-          <h2 className="text-2xl md:text-3xl text-center font-bold mb-5">
-            Registration Form
-          </h2>
-          <FormInput
-            type="email"
-            placeholder="Email"
-            label="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <FormInput
-            type="password"
-            placeholder="Password"
-            label="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <FormInput
-            type="password"
-            placeholder="Repeat password"
-            label="Repeat password"
-            value={repeatPassword}
-            onChange={(e) => setRepeatPassword(e.target.value)}
-          />
-          <div className="mt-5">
-            <button className="btn btn-neutral btn-block text-lg md:text-xl btn-sm md:btn-md">
-              Register
-            </button>
-          </div>
-          <div className="text-center mt-5">
-            <Link className="link" to="/login">
+    <div className="h-screen grid place-items-center w-full ">
+      <Form method="post" className="max-w-96 mx-auto w-full">
+        <h2 className="text-4xl font-bold text-center mb-5 uppercase">
+          Register
+        </h2>
+        <FormInput
+          type="text"
+          placeholder="Name"
+          lebel="Enter your Name"
+          name="name"
+        />
+        <FormInput
+          type="email"
+          placeholder="Email"
+          lebel="Enter your email"
+          name="email"
+        />
+        <FormInput
+          type="password"
+          placeholder="Password"
+          lebel=" Password"
+          name="password"
+        />
+        <FormInput
+          type="password"
+          placeholder=" Repeat Password"
+          lebel="Password"
+        />
+        <div className="mt-5 ">
+          <button
+            className="btn
+     btn-neutral btn-block"
+          >
+            Register
+          </button>
+        </div>
+        <div className="my-5 text-center">
+          <p>
+            Already have an account?{" "}
+            <Link
+              to="/Login"
+              className="link link-primary text-black text-lg font-semibold"
+            >
               Login
             </Link>
-          </div>
-        </form>
-        <ToastContainer />
-      </div>
-    </>
+          </p>
+        </div>
+      </Form>
+    </div>
   );
 }
 

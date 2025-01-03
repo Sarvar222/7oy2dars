@@ -1,60 +1,57 @@
-import { Link, useNavigate } from "react-router-dom";
+import React from "react";
+import Avatar from "./Avatar";
+// react icon
+import { RiFileListLine } from "react-icons/ri";
+import { IoIosAddCircleOutline } from "react-icons/io";
 
-function Sidebar({ user }) {
-  const navigate = useNavigate();
+import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
+import { useLogout } from "../hooks/useLogout";
 
-  const handleLogout = () => {
-    console.log("User logged out:", user.name);
-    navigate("/login");
-  };
-
+function Sidebar() {
+  const { logout } = useLogout();
+  const { user } = useSelector((store) => store.user);
   return (
-    <div className="h-full w-60 bg-gray-800 text-white flex flex-col justify-between">
-      <div>
-        {/* User Info */}
-        <div className="p-4 text-center">
-          <img
-            src={user.avatar}
-            alt="User Avatar"
-            className="w-16 h-16 rounded-full mx-auto"
-          />
-          <h2 className="mt-2 font-bold">{user.name}</h2>
-        </div>
-
-        {/* Navigation */}
-        <nav className="mt-6">
-          <ul className="flex flex-col space-y-3 text-center">
-            <li>
-              <Link to="/" className="block py-2 px-4 bg-gray-700 rounded">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/project"
-                className="block py-2 px-4 bg-gray-700 rounded"
-              >
-                Project
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/create"
-                className="block py-2 px-4 bg-gray-700 rounded"
-              >
-                Create
-              </Link>
-            </li>
-          </ul>
-        </nav>
+    <div className="bg-green-700 h-screen w-[350px] text-white flex flex-col ">
+      <div className="w-20 h-20 rounded-full ml-16 mt-16 mb-16">
+        <img src="../public/ыфкмфк.jfif" alt="" />
       </div>
-
-      {/* Logout */}
-      <div className="p-4 text-center">
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 py-2 px-4 rounded text-white"
-        >
+      <ul className="flex flex-col pr-0 pl-10 mb-auto">
+        <li className="nav-item">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `block px-3 py-2 rounded-l-3xl transition-all duration-900 ${
+                isActive
+                  ? "bg-white text-green-400 transform scale-105"
+                  : "hover:bg-green-500"
+              }`
+            }
+          >
+            <span className="flex items-center gap-2">
+              <RiFileListLine /> Projects
+            </span>
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink
+            to="/create"
+            className={({ isActive }) =>
+              `block px-3 py-2 rounded-l-3xl transition-all duration-900 ${
+                isActive
+                  ? "bg-white text-green-400 transform scale-105"
+                  : "hover:bg-green-500"
+              }`
+            }
+          >
+            <span className="flex items-center gap-2">
+              <IoIosAddCircleOutline /> Create
+            </span>
+          </NavLink>
+        </li>
+      </ul>
+      <div className="flex justify-center mb-10 ">
+        <button onClick={logout} className="btn btn-ghost btn-sm text-lg">
           Logout
         </button>
       </div>

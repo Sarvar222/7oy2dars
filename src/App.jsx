@@ -1,56 +1,69 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+// rrd
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Navigate,
+} from "react-router-dom";
+
+// layouts
+import MainLayout from "./layouts/MainLayout";
+// pages
 import Login from "./pages/Login";
-import Register from "./pages/Register";
-import DashboardLayout from "./components/DashboardLayout";
 import Home from "./pages/Home";
-import Project from "./pages/Project";
 import Create from "./pages/Create";
+import Register from "./pages/Register";
+import ProtectedRoutes from "./components/ProtectedRoutes";
+// actions
+import { action as RegisterAction } from "./pages/Register";
+import { action as LoginAction } from "./pages/Login";
+
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase/config";
+import { login, authReadyAct } from "./app/features/userSlice";
 
 function App() {
-  const user = {
-    id: 1,
-    name: "John Doe",
-    avatar: "https://via.placeholder.com/150",
-  };
-
-  const onlineUsers = [
-    { id: 2, name: "Jane Smith", avatar: "https://via.placeholder.com/150" },
-    { id: 3, name: "Mike Johnson", avatar: "https://via.placeholder.com/150" },
-    { id: 4, name: "Sara Connor", avatar: "https://via.placeholder.com/150" },
-  ];
-
-  return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route
-          path="/"
-          element={
-            <DashboardLayout user={user}>
-              <Home onlineUsers={onlineUsers} />
-            </DashboardLayout>
-          }
-        />
-        <Route
-          path="/project"
-          element={
-            <DashboardLayout user={user}>
-              <Project />
-            </DashboardLayout>
-          }
-        />
-        <Route
-          path="/create"
-          element={
-            <DashboardLayout user={user}>
-              <Create />
-            </DashboardLayout>
-          }
-        />
-      </Routes>
-    </Router>
-  );
+  const dispatch = useDispatch();
+  const { user, authReady } = useSelector((store) => store.user);
+  const routes = createBrowserRouter([
+    {
+      path: "/",
+      element: (
+        <ProtectedRoutes user={user}>
+          <MainLayout />
+        </ProtectedRoutes>
+      ),
+      children: [
+        {
+          index: true,
+          element: <Home />,
+        },
+        {
+          path: "/create",
+          element: <Create />,
+        },
+      ],
+    },
+    {
+      path: "/login",
+      element: user ? <Navigate to="/" /> : <Login />,
+      action: LoginAction,
+    },
+    {
+      path: "/register",
+      element: user ? <Navigate to="/" /> : <Register />,
+      action: RegisterAction,
+    },
+  ]);
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      dispatch(login(user));
+      dispatch(authReadyAct());
+    });
+  }, []);
+  return <> {authReady && <RouterProvider router={routes} />}</>;
 }
 
 export default App;

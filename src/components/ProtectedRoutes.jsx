@@ -6,4 +6,5 @@ function ProtectedRoutes({ user, children }) {
     return <Navigate to="/login" />;
   }
 }
+
 export default ProtectedRoutes;

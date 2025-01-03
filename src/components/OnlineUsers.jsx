@@ -1,18 +1,18 @@
-function OnlineUsers({ users }) {
+import { useCollection } from "../hooks/useCollection";
+function OnlineUsers() {
+  const { documents } = useCollection("users");
   return (
-    <div className="bg-white shadow p-4 rounded">
-      <h3 className="text-lg font-bold mb-4">Online Users</h3>
-      <ul className="space-y-3">
-        {users.map((user) => (
-          <li key={user.id} className="flex items-center space-x-3">
-            <img
-              src="../public/images.png"
-              alt="....."
-              className="w-8 h-8 rounded-full"
-            />
-            <span>{user.name}</span>
-          </li>
-        ))}
+    <div className="bg-green-100 w-[200px] p-10">
+      <ul>
+        {documents &&
+          documents.map((doc) => {
+            return (
+              <li key={doc.id} className="flex gap-2">
+                <p>{doc.displayName}</p>
+                <span>{doc.online ? "online" : "offline"}</span>
+              </li>
+            );
+          })}
       </ul>
     </div>
   );
