@@ -1,32 +1,39 @@
-// rrd
+// react router dom
 import {
   createBrowserRouter,
-  RouterProvider,
   Navigate,
+  RouterProvider,
 } from "react-router-dom";
 
-// layouts
+// Layouts
 import MainLayout from "./layouts/MainLayout";
-// pages
+
+// Pages
 import Login from "./pages/Login";
-import Home from "./pages/Home";
-import Create from "./pages/Create";
 import Register from "./pages/Register";
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Settings from "./pages/Settings";
+
 import ProtectedRoutes from "./components/ProtectedRoutes";
+import { use, useEffect } from "react";
+import Create from "./pages/Create";
+
 // actions
-import { action as RegisterAction } from "./pages/Register";
 import { action as LoginAction } from "./pages/Login";
+import { action as RegisterAction } from "./pages/Register";
+import { action as CreateAction } from "./pages/Create";
 
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
-
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase/config";
 import { login, authReadyAct } from "./app/features/userSlice";
 
 function App() {
   const dispatch = useDispatch();
+
   const { user, authReady } = useSelector((store) => store.user);
+
   const routes = createBrowserRouter([
     {
       path: "/",
@@ -43,6 +50,15 @@ function App() {
         {
           path: "/create",
           element: <Create />,
+          action: CreateAction,
+        },
+        {
+          path: "about/:id",
+          element: <About />,
+        },
+        {
+          path: "/settings",
+          element: <Settings />,
         },
       ],
     },
@@ -57,13 +73,15 @@ function App() {
       action: RegisterAction,
     },
   ]);
+
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
       dispatch(login(user));
       dispatch(authReadyAct());
     });
   }, []);
-  return <> {authReady && <RouterProvider router={routes} />}</>;
+
+  return <>{authReady && <RouterProvider router={routes} />}</>;
 }
 
 export default App;

@@ -1,110 +1,171 @@
-import React from "react";
+import FormInput from "../components/FormInput";
+import { Form, useActionData, useNavigate } from "react-router-dom";
+import FormTextArea from "../components/FormTextArea";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+import { useEffect, useState } from "react";
+import { useFirestore } from "../hooks/useFirestore";
+import { Timestamp } from "firebase/firestore";
+import { serverTimestamp } from "firebase/firestore";
+import toast from "react-hot-toast";
+import { useCollection } from "../hooks/useCollection";
+
+const animatedComponents = makeAnimated();
+
+export async function action({ request }) {
+  const form = await request.formData();
+  const name = form.get("name");
+  const description = form.get("description");
+  const dueTo = form.get("dueTo")
+    ? Timestamp.fromDate(new Date(form.get("dueTo")))
+    : null;
+
+  return { name, description, dueTo };
+}
+
+const projectTypes = [
+  { value: "smm", label: "SMM" },
+  { value: "frontend", label: "Frontend" },
+  { value: "backend", label: "Backend" },
+  { value: "marketing", label: "Marketing" },
+  { value: "mobilograf", label: "Mobilograf" },
+];
 
 function Create() {
+  const navigate = useNavigate();
+  const { addDocument, isPending, error } = useFirestore("projects");
+  const { documents } = useCollection("users");
+
+  const CreateActionData = useActionData();
+  const [assignedUsers, setAssignedUsers] = useState([]);
+  const [projectType, setProjectType] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    setUsers(
+      documents?.map((document) => {
+        return {
+          value: { ...document },
+          label: document.displayName,
+        };
+      })
+    );
+  }, [documents]);
+
+  const selectUser = (user) => {
+    setAssignedUsers(user);
+  };
+
+  const selectProjectType = (type) => {
+    setProjectType(type);
+  };
+
+  const handleValidation = () => {
+    if (!CreateActionData?.name) {
+      toast.error("Project name is required!");
+      return false;
+    }
+    if (!CreateActionData?.description) {
+      toast.error("Project description is required!");
+      return false;
+    }
+    if (CreateActionData.description.length < 10) {
+      toast.error("Project description must be at least 10 characters!");
+      return false;
+    }
+    if (!CreateActionData?.dueTo) {
+      toast.error("Due date is required!");
+      return false;
+    }
+    if (assignedUsers.length === 0) {
+      toast.error("Please assign at least one user!");
+      return false;
+    }
+    if (projectType.length === 0) {
+      toast.error("Please select at least one project type!");
+      return false;
+    }
+    return true;
+  };
+
+  useEffect(() => {
+    if (CreateActionData && handleValidation()) {
+      addDocument({
+        ...CreateActionData,
+        assignedUsers: assignedUsers.map((au) => au.value),
+        projectType: projectType.map((pt) => pt.value),
+        createdAt: serverTimestamp(new Date()),
+      });
+      navigate("/");
+      toast.success("Project created successfully!");
+    }
+  }, [CreateActionData]);
+
   return (
-    <div style={{ margin: "20px", fontFamily: "Arial, sans-serif" }}>
-      <form style={{ maxWidth: "400px", margin: "auto" }}>
-        <div style={{ marginBottom: "15px" }}>
-          <label
-            htmlFor="projectName"
-            style={{ display: "block", marginBottom: "5px" }}
-          >
-            Project name
-          </label>
-          <input
-            type="text"
-            id="projectName"
-            placeholder="write project name here"
-            style={{
-              width: "100%",
-              padding: "8px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-            }}
+    <div className="flex flex-col items-center px-5">
+      <h2 className="text-4xl font-bold text-center mb-10 text-green-600 uppercase">
+        CREATE
+      </h2>
+      <Form
+        method="post"
+        className="flex flex-col gap-7 max-w-[700px] w-full justify-center bg-white p-10 shadow-lg rounded-lg border border-gray-300"
+      >
+        <FormInput
+          name="name"
+          label="Project Name"
+          type="text"
+          placeholder="Enter project name here"
+        />
+        <FormTextArea label="Project Description" name="description" />
+        <FormInput label="Set Due Date" type="date" name="dueTo" />
+        <label className="form-control">
+          <div className="label">
+            <span className="label-text font-medium text-gray-700">
+              Project Type:
+            </span>
+          </div>
+          <Select
+            onChange={selectProjectType}
+            options={projectTypes}
+            isMulti
+            components={animatedComponents}
           />
-        </div>
-        <div style={{ marginBottom: "15px" }}>
-          <label
-            htmlFor="projectDescription"
-            style={{ display: "block", marginBottom: "5px" }}
-          >
-            Project description
-          </label>
-          <textarea
-            id="projectDescription"
-            placeholder="Type here"
-            style={{
-              width: "100%",
-              padding: "8px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-              resize: "vertical",
-            }}
-          ></textarea>
-        </div>
-        <div style={{ marginBottom: "15px" }}>
-          <label
-            htmlFor="dueDate"
-            style={{ display: "block", marginBottom: "5px" }}
-          >
-            Set due to
-          </label>
-          <input
-            type="date"
-            id="dueDate"
-            style={{
-              width: "100%",
-              padding: "8px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-            }}
+        </label>
+        <label className="form-control">
+          <div className="label">
+            <span className="label-text font-medium text-gray-700">
+              Assign Users:
+            </span>
+          </div>
+          <Select
+            onChange={selectUser}
+            options={users}
+            isMulti
+            components={animatedComponents}
           />
-        </div>
-        <div style={{ marginBottom: "15px" }}>
-          <select
-            style={{
-              width: "100%",
-              padding: "8px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-              backgroundColor: "#fff",
-            }}
-          >
-            <option value="" disabled selected>
-              Select...
-            </option>
-          </select>
-        </div>
-        <div style={{ marginBottom: "15px" }}>
-          <select
-            style={{
-              width: "100%",
-              padding: "8px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-              backgroundColor: "#fff",
-            }}
-          >
-            <option value="" disabled selected>
-              Select...
-            </option>
-          </select>
-        </div>
-        <button
-          type="submit"
-          style={{
-            width: "100%",
-            padding: "10px",
-            backgroundColor: "#6200ea",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-            cursor: "pointer",
-          }}
-        >
-          Add project
-        </button>
-      </form>
+        </label>
+        {isPending && (
+          <div className="flex justify-end">
+            <button
+              className=" py-3 px-6 mt-8 bg-teal-500 text-white rounded-lg font-semibold text-lg shadow-md hover:bg-teal-600 focus:ring-2 focus:ring-teal-400 focus:outline-none transition-all duration-300"
+              type="submit"
+              disabled
+            >
+              Loading...
+            </button>
+          </div>
+        )}
+        {!isPending && (
+          <div className="flex justify-end">
+            <button
+              className="py-3 px-6 mt-8 bg-green-500 text-white rounded-lg font-semibold text-lg shadow-md hover:bg-teal-600 focus:ring-2 focus:ring-teal-400 focus:outline-none transition-all duration-300"
+              type="submit"
+            >
+              Add Project
+            </button>
+          </div>
+        )}
+      </Form>
     </div>
   );
 }

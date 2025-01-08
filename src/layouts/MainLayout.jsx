@@ -1,15 +1,18 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "../components/Sidebar";
+import UserNavbar from "../components/UserNavbar";
 import OnlineUsers from "../components/OnlineUsers";
+
 function MainLayout() {
   return (
-    <div className="flex justify-between">
-      <Sidebar />
-      <main className="bg-white w-full p-10">
-        <Outlet />
-      </main>
-      <OnlineUsers />
-    </div>
+    <>
+      <div className="flex justify-between bg-slate-300">
+        <UserNavbar />
+        <main className=" bg-slate-300 w-full p-10">
+          <Outlet />
+        </main>
+        <OnlineUsers />
+      </div>
+    </>
   );
 }
 
