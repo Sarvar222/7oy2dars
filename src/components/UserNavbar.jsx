@@ -8,7 +8,6 @@ import { useLogout } from "../hooks/useLogout";
 // icons
 import { IoAddCircleOutline } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
-import { FaProjectDiagram } from "react-icons/fa";
 import { GoProjectRoadmap } from "react-icons/go";
 import { useCollection } from "../hooks/useCollection";
 import Button from "./Button";
