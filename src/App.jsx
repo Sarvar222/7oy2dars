@@ -41,7 +41,7 @@ function App() {
       ),
       children: [
         {
-          path: "/",
+          index: true,
           element: <Dashboard />,
         },
         {
