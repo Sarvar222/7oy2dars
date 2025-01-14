@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import FormInput from "../components/FormInput";
 import { Form, Link, useActionData } from "react-router-dom";
+import { useRegister } from "../hooks/useRegister"; // Проверьте путь
 
 // action
 export const action = async ({ request }) => {
@@ -12,7 +13,7 @@ export const action = async ({ request }) => {
 };
 
 function Register() {
-  const { registerWithEmailAndPassword } = Register();
+  const { registerWithEmailAndPassword } = useRegister();
   const data = useActionData();
 
   useEffect(() => {
