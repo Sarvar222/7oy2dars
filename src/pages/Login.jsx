@@ -7,7 +7,6 @@ function Login() {
   return (
       <div className="align-elements flex w-full max-w-96 flex-col gap-5">
         <div>
-          <img src={Logo} alt="site logo" className="mx-auto w-16" />
           <h2 className="text-center text-2xl font-semibold text-white md:text-4xl">
             Login
           </h2>
