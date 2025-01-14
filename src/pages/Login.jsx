@@ -7,8 +7,8 @@ function Login() {
 
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-red-500">
-      <div className="w-full max-w-lg bg-white rounded-lg shadow-2xl transform transition duration-500 hover:scale-105">
-        <div className="text-center ml-96">
+      <div className="ml-96 w-full max-w-lg bg-white rounded-lg shadow-2xl transform transition duration-500 hover:scale-105">
+        <div className="text-center">
           <h2 className="text-4xl font-bold text-gray-800">
             Welcome Back!
           </h2>
