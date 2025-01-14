@@ -30,6 +30,7 @@ import { useGlobalContext } from "./hooks/useGlobalContext";
 
 function App() {
   const { user, authIsReady } = useGlobalContext();
+  console.log(user);
 
   const routes = createBrowserRouter([
     {
@@ -41,7 +42,7 @@ function App() {
       ),
       children: [
         {
-          index: true,
+          path: "/",
           element: <Dashboard />,
         },
         {
