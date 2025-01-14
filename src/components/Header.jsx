@@ -5,7 +5,6 @@ import { useSignOut } from "../hooks/useSignOut";
 import { IoMdMoon, IoMdSunny } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { useDocument } from "../hooks/useDocument";
-import Logo from "../assets/noysi.svg";
 import { useThemeToggler } from "../hooks/useThemeToggler";
 
 const themeFromLocalStorage = () => {
