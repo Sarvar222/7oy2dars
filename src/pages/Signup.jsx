@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import FormInput from "../components/FormInput";
 import { Form, Link, useActionData } from "react-router-dom";
-import { useRegister } from "../hooks/useRegister";
 
 // action
 export const action = async ({ request }) => {

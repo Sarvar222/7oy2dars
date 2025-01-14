@@ -1,22 +1,30 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { onSnapshot, collection, query, where } from "firebase/firestore";
 import { db } from "../firebase/config";
-import { collection, onSnapshot } from "firebase/firestore";
 
-// collection
-export function useCollection(collectionName) {
+export function useCollection(collectionName, _query, _where) {
   const [documents, setDocuments] = useState(null);
+
+  const _q = useRef(_query).current;
+  const _w = useRef(_query).current;
+
   useEffect(() => {
-    const q = collection(db, collectionName);
-    onSnapshot(q, (querySnapshot) => {
-      const data = [];
-      querySnapshot.forEach((snapshot) => {
-        data.push({
-          id: snapshot.id,
-          ...snapshot.data(),
-        });
+    let ref = collection(db, collectionName);
+
+    if (_q) {
+      ref = query(ref, query(..._q), where(..._w));
+    }
+
+    const unsubscribe = onSnapshot(ref, (querySnapshot) => {
+      const results = [];
+      querySnapshot.forEach((doc) => {
+        results.push({ ...doc.data(), id: doc.id });
       });
-      setDocuments(data);
+      setDocuments(results);
     });
-  }, [collectionName]);
+
+    return () => unsubscribe();
+  }, [collectionName, _q, _w]);
+
   return { documents };
 }

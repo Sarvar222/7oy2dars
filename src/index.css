@@ -2,10 +2,113 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-display: swap;
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 300;
+  src: url("./fonts/manrope-v15-cyrillic_latin-300.woff2") format("woff2");
+}
+@font-face {
+  font-display: swap;
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./fonts/manrope-v15-cyrillic_latin-regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 500;
+  src: url("./fonts/manrope-v15-cyrillic_latin-500.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 600;
+  src: url("./fonts/manrope-v15-cyrillic_latin-600.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 700;
+  src: url("./fonts/manrope-v15-cyrillic_latin-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 800;
+  src: url("./fonts/manrope-v15-cyrillic_latin-800.woff2") format("woff2");
+}
+
 @layer components {
-  .nav-item .active {
-    @apply bg-slate-300 py-2 px-4 rounded-tl-xl rounded-bl-xl text-black w-full;
+  .align-elements {
+    @apply mx-auto max-w-6xl max-w-full px-4;
+  }
+
+  .create-btn {
+    @apply md:col-start-1 md:col-end-3 md:row-start-5 md:flex md:w-full md:justify-center;
+  }
+
+  .create-form {
+    @apply grid grid-cols-1 gap-3 md:grid-cols-2 md:grid-rows-6 md:items-center;
+  }
+
+  #root {
+    @apply lg:flex;
+  }
+
+  img {
+    @apply object-cover;
   }
 }
-/* bg-gradient-to-b from-slate-800 to-slate-600 */
-/* bg-gradient-to-b from-slate-300 to-slate-400 */
+
+:root {
+  --color-dark: #282a36;
+  --color-wheite: #fff;
+}
+
+body.light {
+  --color-dark: #fff;
+  --color-wheite: #282a36;
+}
+
+.react-select__value-container {
+  background-color: var(--color-dark);
+}
+
+.react-select__indicators {
+  color: #fff;
+  background-color: var(--color-dark);
+}
+
+.react-select__single-value {
+  color: var(--color-wheite);
+}
+
+.react-select__option {
+  background-color: red;
+  color: var(--color-dark);
+}
+
+body.dracula .react-select__option {
+  color: var(--color-dark);
+}
+
+body.dracula .react-select__single-value {
+  color: var(--color-wheite);
+}
+
+body.dracula .project-card:hover {
+  box-shadow:
+    0 20px 25px -5px rgb(255 255 255 / 0.1),
+    0 8px 10px -6px rgb(255 255 255 / 0.1);
+}

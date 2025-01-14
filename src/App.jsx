@@ -1,38 +1,35 @@
-// react router dom
 import {
   createBrowserRouter,
-  Navigate,
   RouterProvider,
+  Navigate,
 } from "react-router-dom";
 
-// Layouts
-import MainLayout from "./layouts/MainLayout";
+// layouts
+import MainLayout from "./layout/MainLayout";
 
-// Pages
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Settings from "./pages/Settings";
-
+// components
 import ProtectedRoutes from "./components/ProtectedRoutes";
-import { use, useEffect } from "react";
-import Create from "./pages/Create";
+
+// pages
+import {
+  Create,
+  Dashboard,
+  Profile,
+  Signup,
+  Login,
+  OnlineUsers,
+  User,
+  Project,
+} from "./pages";
 
 // actions
-import { action as LoginAction } from "./pages/Login";
-import { action as RegisterAction } from "./pages/Register";
-import { action as CreateAction } from "./pages/Create";
+import { action as signupAction } from "./pages/Signup";
 
-import { useSelector, useDispatch } from "react-redux";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase/config";
-import { login, authReadyAct } from "./app/features/userSlice";
+// context
+import { useGlobalContext } from "./hooks/useGlobalContext";
 
 function App() {
-  const dispatch = useDispatch();
-
-  const { user, authReady } = useSelector((store) => store.user);
+  const { user, authIsReady } = useGlobalContext();
 
   const routes = createBrowserRouter([
     {
@@ -44,44 +41,51 @@ function App() {
       ),
       children: [
         {
-          index: true,
-          element: <Home />,
+          path: "/",
+          element: <Dashboard />,
         },
         {
           path: "/create",
           element: <Create />,
-          action: CreateAction,
         },
         {
-          path: "about/:id",
-          element: <About />,
+          path: "/profile",
+          element: <Profile />,
         },
         {
-          path: "/settings",
-          element: <Settings />,
+          path: "/onlineUsers",
+          element: <OnlineUsers />,
+        },
+        {
+          path: "/user/:id",
+          element: <User />,
+        },
+        {
+          path: "/project/:id",
+          element: <Project />,
         },
       ],
     },
     {
-      path: "/login",
-      element: user ? <Navigate to="/" /> : <Login />,
-      action: LoginAction,
+      path: "/signup",
+      element: user ? <Navigate to="/" /> : <Signup />,
+      action: signupAction,
     },
     {
-      path: "/register",
-      element: user ? <Navigate to="/" /> : <Register />,
-      action: RegisterAction,
+      path: "/login",
+      element: user ? <Navigate to="/" /> : <Login />,
     },
   ]);
 
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      dispatch(login(user));
-      dispatch(authReadyAct());
-    });
-  }, []);
+  if (!authIsReady) {
+    return (
+      <section className="grid h-screen w-full place-items-center">
+        <span className="loading"></span>
+      </section>
+    );
+  }
 
-  return <>{authReady && <RouterProvider router={routes} />}</>;
+  return <>{authIsReady && <RouterProvider router={routes} />}</>;
 }
 
 export default App;
