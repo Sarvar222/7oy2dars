@@ -23,7 +23,7 @@ function Register() {
   }, [data]);
 
   return (
-    <div className="h-screen grid place-items-center w-full bg-gray-100">
+    <div className="align-elements flex w-full max-w-96 flex-col gap-5">
       <Form
         method="post"
         className="max-w-md mx-auto w-full bg-white p-6 shadow-md rounded-md"
