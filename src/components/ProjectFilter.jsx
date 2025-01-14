@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 const filters = [
   "all",
   "mine",
@@ -9,7 +8,6 @@ const filters = [
   "marketing",
   "others",
 ];
-
 function ProjectFilter({ changeFilter }) {
   const [currentFilter, setCurrentFilter] = useState("all");
   return (

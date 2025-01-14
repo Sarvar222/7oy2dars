@@ -9,11 +9,9 @@ function Dashboard() {
   const { user } = useGlobalContext();
   const { documents } = useCollection("projects");
   const [filter, setFilter] = useState("all");
-
   const changeFilter = (newFilter) => {
     setFilter(newFilter);
   };
-
   const projects = documents
     ? documents.filter((doc) => {
         switch (filter) {
@@ -50,11 +48,21 @@ function Dashboard() {
     <section>
       <div className="align-elements">
         {documents && (
-          <h1 className="text-center mt-12 text-2xl font-medium md:mb-20 md:text-3xl">
+          <h1 className="mb-10 text-2xl font-medium md:mb-20 md:text-3xl">
             Dashboard
           </h1>
         )}
         {documents.length ? <ProjectFilter changeFilter={changeFilter} /> : ""}
+        {documents.length ? (
+          <ProjectList projects={projects} />
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-5">
+            <h2 className="text-2xl md:text-3xl">No projects yet</h2>
+            <Link to="/create" className="btn btn-secondary btn-sm md:btn-md">
+              <IoMdAdd className="text-xl" /> Create
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );

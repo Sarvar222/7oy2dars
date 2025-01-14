@@ -52,7 +52,7 @@ export function GlobalContextProvider({ children }) {
     });
     document.documentElement.setAttribute(
       "data-theme",
-      themeFromLocalStorage()
+      themeFromLocalStorage(),
     );
   }, []);
 
@@ -61,4 +61,3 @@ export function GlobalContextProvider({ children }) {
       {children}
     </GlobalContext.Provider>
   );
-}
