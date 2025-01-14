@@ -8,6 +8,12 @@ export const action = async ({ request }) => {
   const displayName = form.get("name");
   const email = form.get("email");
   const password = form.get("password");
+  const repeatPassword = form.get("repeatPassword");
+
+  if (password !== repeatPassword) {
+    return { error: "Passwords do not match" };
+  }
+
   return { displayName, email, password };
 };
 
@@ -16,7 +22,7 @@ function Register() {
   const data = useActionData();
 
   useEffect(() => {
-    if (data) {
+    if (data && data.displayName && data.email && data.password) {
       registerWithEmailAndPassword(data.displayName, data.email, data.password);
     }
   }, [data]);
@@ -30,28 +36,30 @@ function Register() {
         <h2 className="text-4xl font-bold text-center mb-5 uppercase text-gray-700">
           Register
         </h2>
+        {data?.error && <p className="text-red-500 text-center">{data.error}</p>}
         <FormInput
           type="text"
           placeholder="Name"
-          lebel="Enter your Name"
+          label="Enter your Name"
           name="name"
         />
         <FormInput
           type="email"
           placeholder="Email"
-          lebel="Enter your email"
+          label="Enter your email"
           name="email"
         />
         <FormInput
           type="password"
           placeholder="Password"
-          lebel="Password"
+          label="Password"
           name="password"
         />
         <FormInput
           type="password"
           placeholder="Repeat Password"
-          lebel="Repeat Password"
+          label="Repeat Password"
+          name="repeatPassword"
         />
         <div className="mt-5">
           <button className="btn btn-neutral btn-block bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">
