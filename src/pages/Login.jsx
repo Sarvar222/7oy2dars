@@ -4,65 +4,49 @@ import { useAuthWithGoogle } from "../hooks/useAuthWithGoogle";
 
 function Login() {
   const { authenticateWithGoogle, isPending } = useAuthWithGoogle();
-
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-r from-purple-500 via-pink-500 to-red-500">
-      <div className="ml-96 w-full max-w-lg bg-white rounded-lg shadow-2xl transform transition duration-500 hover:scale-105">
-        <div className="text-center">
-          <h2 className="text-4xl font-bold text-gray-800">
-            Welcome Back!
+      <div className="align-elements flex w-full max-w-96 flex-col gap-5">
+        <div>
+          <h2 className="text-center text-2xl font-semibold text-white md:text-4xl">
+            Login
           </h2>
-          <p className="mt-2 text-gray-600">Please login to access your account</p>
         </div>
-        <Form method="post" className="mt-6 space-y-6">
+        <Form method="post">
           <FormInput
             label="Email"
             type="email"
             name="email"
-            size="input-md"
-            className="w-full"
+            size="input-sm md:input-md"
           />
           <FormInput
             label="Password"
             type="password"
             name="password"
-            size="input-md"
-            className="w-full"
+            size="input-sm md:input-md"
           />
-          <div className="space-y-4">
-            <button
-              className="w-full py-3 px-4 bg-purple-600 text-white rounded-lg shadow-md hover:bg-purple-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 transition duration-300"
-              type="submit"
-            >
+          <div className="mt-5 flex flex-col gap-2 md:flex-row">
+            <button className="btn btn-primary btn-sm grow md:btn-md">
               Login
             </button>
             <button
               type="button"
               onClick={authenticateWithGoogle}
               disabled={isPending}
-              className={`w-full py-3 px-4 rounded-lg shadow-md ${
-                isPending
-                  ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                  : "bg-red-500 text-white hover:bg-red-600 hover:shadow-lg"
-              } focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 transition duration-300`}
+              className="btn btn-secondary btn-sm grow md:btn-md disabled:bg-slate-400"
             >
-              {isPending ? "Loading..." : "Sign in with Google"}
+              {isPending ? "Loading..." : "Google"}
             </button>
           </div>
         </Form>
-        <div className="mt-6 text-center text-gray-600">
+        <div className="text-center text-white">
           <p>
-            Don't have an account?{" "}
-            <Link
-              to="/signup"
-              className="text-purple-600 hover:underline transition duration-300"
-            >
+            if you don't have an account, please{" "}
+            <Link to="/signup" className="link link-primary bg-white">
               Register
             </Link>
           </p>
         </div>
       </div>
-    </div>
   );
 }
 
