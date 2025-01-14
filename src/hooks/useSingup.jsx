@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../firebase/config";
+import { auth } from "../firebase/firebaseConfig";
 import { checkerrorCode } from "../utils";
 import { useGlobalContext } from "./useGlobalContext";
 import toast from "react-hot-toast";
@@ -19,6 +19,7 @@ export function useSingup() {
 
       await updateProfile(auth.currentUser, {
         displayName,
+        photoURL: `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${displayName}`,
       });
 
       await addUserDocument(res.user);
