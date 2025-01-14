@@ -55,8 +55,11 @@ function Register() {
           lebel="Repeat Password"
         />
         <div className="mt-5">
-          <button className="btn btn-neutral btn-block btn-primary text-white py-2 px-4 rounded-md ">
-            Register
+          <button
+            disabled={isPending}
+            className="btn btn-primary btn-sm grow md:btn-md"
+          >
+            {isPending ? "Loading..." : "Login"}
           </button>
         </div>
         <div className="my-5 text-center">
