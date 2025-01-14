@@ -5,12 +5,6 @@ import { useAuthWithGoogle } from "../hooks/useAuthWithGoogle";
 function Login() {
   const { authenticateWithGoogle, isPending } = useAuthWithGoogle();
   return (
-    <section
-      className="grid h-screen w-full place-items-center bg-cover bg-center bg-no-repeat"
-      style={{
-        backgroundImage: `linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url(${LoginBg})`,
-      }}
-    >
       <div className="align-elements flex w-full max-w-96 flex-col gap-5">
         <div>
           <img src={Logo} alt="site logo" className="mx-auto w-16" />
@@ -54,7 +48,6 @@ function Login() {
           </p>
         </div>
       </div>
-    </section>
   );
 }
 
