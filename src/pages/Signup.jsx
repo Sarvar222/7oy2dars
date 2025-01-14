@@ -12,6 +12,7 @@ export const action = async ({ request }) => {
 };
 
 function Register() {
+  const { registerWithEmailAndPassword } = Register();
   const data = useActionData();
 
   useEffect(() => {
