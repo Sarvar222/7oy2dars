@@ -23,7 +23,7 @@ function Register() {
   }, [data]);
 
   return (
-    <div className="align-elements flex w-full max-w-96 flex-col gap-5">
+    <div className="align-elements flex w-full max-w-96 flex-col gap-5 mt-12">
       <Form
         method="post"
         className="max-w-md mx-auto w-full bg-white p-6 shadow-md rounded-md"
@@ -55,7 +55,7 @@ function Register() {
           lebel="Repeat Password"
         />
         <div className="mt-5">
-          <button className="btn btn-neutral btn-block bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600">
+          <button className="btn btn-neutral btn-block btn-primary text-white py-2 px-4 rounded-md ">
             Register
           </button>
         </div>

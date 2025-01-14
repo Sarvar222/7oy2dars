@@ -1,17 +1,26 @@
-import { Form, Link } from "react-router-dom";
+import { Form, Link, useNavigate } from "react-router-dom";
 import { FormInput } from "../components";
 import { useAuthWithGoogle } from "../hooks/useAuthWithGoogle";
 
 function Login() {
+  const navigate = useNavigate(); // Хук для навигации
   const { authenticateWithGoogle, isPending } = useAuthWithGoogle();
+
+  const handleLogin = async (event) => {
+    event.preventDefault();
+    // Ваш код для логина, например, аутентификация через email и password
+    // После успешной аутентификации:
+    navigate('/dashboard'); // Переход на страницу Dashboard
+  };
+
   return (
-      <div className="align-elements flex w-full max-w-96 flex-col gap-5">
-        <div>
-          <h2 className="text-center text-2xl font-semibold text-white md:text-4xl">
-            Login
+      <div className="max-w-md mx-auto w-full bg-white p-6 shadow-md rounded-md mt-24">
+        <div className="align-elements flex w-full max-w-96 flex-col gap-5">
+          <h2 className="text-center text-2xl font-bold text-gray-700 md:text-4xl">
+            Log In
           </h2>
         </div>
-        <Form method="post">
+        <Form method="post" onSubmit={handleLogin}>
           <FormInput
             label="Email"
             type="email"
@@ -26,21 +35,21 @@ function Login() {
           />
           <div className="mt-5 flex flex-col gap-2 md:flex-row">
             <button className="btn btn-primary btn-sm grow md:btn-md">
-              Login
+              Log In
             </button>
             <button
               type="button"
               onClick={authenticateWithGoogle}
               disabled={isPending}
-              className="btn btn-secondary btn-sm grow md:btn-md disabled:bg-slate-400"
+              className="btn btn-secondary btn-sm grow md:btn-md"
             >
-              {isPending ? "Loading..." : "Google"}
+              {isPending ? "Loading..." : "Log In with Google"}
             </button>
           </div>
         </Form>
-        <div className="text-center text-white">
+        <div className="text-center text-gray-700 mt-5">
           <p>
-            if you don't have an account, please{" "}
+            Don't have an account?{" "}
             <Link to="/signup" className="link link-primary bg-white">
               Register
             </Link>

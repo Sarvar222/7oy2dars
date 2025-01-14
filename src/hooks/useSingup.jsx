@@ -19,7 +19,6 @@ export function useSingup() {
 
       await updateProfile(auth.currentUser, {
         displayName,
-        photoURL: `https://api.dicebear.com/9.x/notionists-neutral/svg?seed=${displayName}`,
       });
 
       await addUserDocument(res.user);
