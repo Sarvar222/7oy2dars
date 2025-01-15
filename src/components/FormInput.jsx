@@ -1,18 +1,32 @@
-function FormInput({ type, label, size, name, errorText }) {
+const FormInput = ({
+  type,
+  label,
+  placeholder,
+  name,
+  error,
+  errorText,
+  className,
+}) => {
   return (
-    <label className="form-control w-full">
+    <label className="form-control w-full mb-2">
       <div className="label">
-        <span className="label-text text-white">{label}</span>
+        <span className="label-text">{label}</span>
       </div>
       <input
         type={type}
-        placeholder="Type here"
-        className={`input input-bordered w-full ${size}`}
+        placeholder={placeholder}
+        className={`input input-bordered   ${error} ${className} `}
         name={name}
-        required
       />
+      {errorText && (
+        <div className="label">
+          <span className="label-text-alt text-red-500 italic ">
+            {errorText}
+          </span>
+        </div>
+      )}
     </label>
   );
-}
+};
 
 export default FormInput;

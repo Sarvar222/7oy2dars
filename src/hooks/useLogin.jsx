@@ -1,34 +1,37 @@
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
-import { auth } from "../firebase/firebaseConfig";
-import { checkerrorCode } from "../utils";
-import { useGlobalContext } from "./useGlobalContext";
+import { auth, db } from "../firebase/config";
 import toast from "react-hot-toast";
-import { useFirestore } from "../hooks/useFirestore";
+import { useDispatch } from "react-redux";
+import { login,  } from "../app/features/userSlice";
+import { doc, setDoc } from "firebase/firestore";
+import { getFirebaseAuthErrorMessage } from "../utils";
+
 export function useLogin() {
-  const { updateDocument } = useFirestore("users");
-  const [isPending, setIsPending] = useState(false);
-  const { dispatch } = useGlobalContext();
-  const login = async (email, password) => {
-    setIsPending(true);
+  const dispatch = useDispatch();
+  const loginWithEmailAndPassword = async (email, password) => {
+    dispatch(setIsPending(true));
     try {
-      const res = await signInWithEmailAndPassword(auth, email, password);
-      dispatch({ type: "LOGIN", payload: res.user });
-      await updateDocument(res.user.uid, {
+      let res = await signInWithEmailAndPassword(auth, email, password);
+
+      if (!res) {
+        throw new Error("Authentication failed, no response from Firebase.");
+      }
+      await setDoc(doc(db, "users", res.user.uid), {
+        displayName: res.user.displayName,
+        id: res.user.uid,
+        photoURL: res.user.photoURL,
         online: true,
       });
+      dispatch(login(res.user));
+      dispatch(setIsPending(false));
+
       toast.success(`Welcome back ${res.user.displayName}`);
-      setIsPending(false);
-    } catch (err) {
-      console.log(err.message);
-      console.log(err.code);
-      checkerrorCode(err.code);
-    } finally {
-      setIsPending(false);
+    } catch (error) {
+      toast.error(getFirebaseAuthErrorMessage(error.code));
+      toast.error(error.message);
+      dispatch(setIsPending(false));
     }
   };
-  return {
-    login,
-    isPending,
-  };
+
+  return { loginWithEmailAndPassword };
 }

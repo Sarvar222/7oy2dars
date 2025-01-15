@@ -1,76 +1,45 @@
 import { useCollection } from "../hooks/useCollection";
-import { useGlobalContext } from "../hooks/useGlobalContext";
-import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
-
-const container = {
-  hidden: { opacity: 1 },
-  visible: {
-    opacity: 1,
-    transition: {
-      delayChildren: 0.3,
-      staggerChildren: 0.2,
-    },
-  },
-};
-
-const item = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-  },
-};
 
 function OnlineUsers() {
   const { documents } = useCollection("users");
-  const { user: _user } = useGlobalContext();
-
-  const sortedDocuments = documents
-    ? [...documents].sort((a, b) => {
-        if (a.id === _user.uid) return -1; // `a` user.uid bilan mos kelsa, yuqoriga chiqadi
-        if (b.id === _user.uid) return 1; // `b` user.uid bilan mos kelsa, yuqoriga chiqadi
-        if (b.online === a.online) return 0; // Agar online status bir xil bo‘lsa, joy o‘zgarmaydi
-        return b.online ? 1 : -1; // Online foydalanuvchilar yuqorida bo‘ladi
-      })
-    : [];
 
   return (
-    <div className="hidden h-screen w-64 shrink-0 overflow-x-auto bg-success bg-opacity-10 p-2 pt-10 dark:bg-opacity-20 lg:block">
-      <h4 className="mb-5 text-xl font-medium">Users:</h4>
-      {documents && (
-        <motion.ul
-          className="container flex flex-col gap-4"
-          variants={container}
-          initial="hidden"
-          animate="visible"
-        >
-          {sortedDocuments.map((user) => {
-            return (
-              <motion.li key={user.id} className="item" variants={item}>
-                <Link
-                  className="text-md btn btn-ghost btn-outline btn-sm btn-block h-auto justify-start px-1 py-2"
-                  to={`/user/${user.id}`}
-                >
+    <div className="bg-base-300 min-h-screen p-10 rounded-tl-2xl rounded-bl-2xl shadow-xl">
+      <div className="w-[240px] mx-auto">
+        <h1 className="mb-8 text-center text-2xl font-bold tracking-wide">
+          Online Users
+        </h1>
+        <ul className="space-y-3">
+          {documents &&
+            documents.map((doc) => (
+              <li
+                key={doc.id}
+                className={`flex items-center gap-4 p-4 rounded-lg shadow-lg   ${
+                  doc.online ? " bg-accent" : "bg-warning"
+                }`}
+              >
+                <div className="relative">
                   <img
-                    src={user.photoURL}
-                    alt=""
-                    className="h-10 w-10 rounded-full"
+                    src={doc.photoURL}
+                    alt="User Avatar"
+                    className="w-12 h-12 rounded-full border-2 border-white"
                   />
-                  <span className="mr-auto block">
-                    {user.displayName} {user.id == _user.uid && "(you)"}
-                  </span>
-                  <div className="flex items-center gap-1">
-                    <span
-                      className={`block h-3 w-3 rounded-full ${user.online ? "bg-green-400" : "bg-slate-500"}`}
-                    ></span>
-                  </div>
-                </Link>
-              </motion.li>
-            );
-          })}
-        </motion.ul>
-      )}
+                  <span
+                    className={`absolute bottom-0 right-0 w-4 h-4 rounded-full border-2 border-white ${
+                      doc.online ? "bg-green-300" : "bg-red-400"
+                    }`}
+                  ></span>
+                </div>
+                <div className="flex flex-col">
+                  <p className="text-lg font-semibold">{doc.displayName}</p>
+                  <p className="text-sm italic opacity-80">
+                    {doc.online ? "Currently:  Online" : "Currently: Offline"}
+                  </p>
+                </div>
+              </li>
+            ))}
+        </ul>
+      </div>
     </div>
   );
 }

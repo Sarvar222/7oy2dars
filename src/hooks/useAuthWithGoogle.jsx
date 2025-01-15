@@ -1,57 +1,45 @@
-import { useState, useEffect } from "react";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth } from "../firebase/config";
-import { checkerrorCode } from "../utils";
+import { auth, db } from "../firebase/config";
 import toast from "react-hot-toast";
-import { useGlobalContext } from "../hooks/useGlobalContext";
-import { useFirestore } from "./useFirestore";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { login } from "../app/features/userSlice";
+import { doc, setDoc } from "firebase/firestore";
 
 export function useAuthWithGoogle() {
-  const { dispatch } = useGlobalContext();
-  const [isPending, setIsPending] = useState(false);
-  const [isCancelled, setIsCancelled] = useState(false);
-  const { addUserDocument, updateDocument, state } = useFirestore("users");
+  const [isCencel, setIsCencel] = useState(false);
 
-  useEffect(() => {
-    return () => setIsCancelled(true);
-  }, []);
-
-  const authenticateWithGoogle = async () => {
-    setIsPending(true);
+  const provider = new GoogleAuthProvider();
+  const dispatch = useDispatch();
+  const authWithGoogle = async () => {
+    // dispatch(setIsPending(true));
     try {
-      const provider = new GoogleAuthProvider();
-      const result = await signInWithPopup(auth, provider);
-
-      if (result) {
-        const user = await getDoc(doc(db, "users", result.user.uid));
-
-        if (user.exists()) {
-          await updateDocument(result.user.uid, {
-            online: true,
-          });
-        } else {
-          await addUserDocument(result.user);
-        }
+      const res = await signInWithPopup(auth, provider);
+      if (!isCencel) {
+        await setDoc(doc(db, "users", res.user.uid), {
+          displayName: res.user.displayName,
+          id: res.user.uid,
+          photoURL: res.user.photoURL,
+          online: true,
+        });
       }
-
-      if (!isCancelled) {
-        const user = result.user;
-        dispatch({ type: "LOGIN", payload: user });
-        toast.success("Welcome to the Noysi");
-        setIsPending(false);
-      }
+      console.log(res.user);
+      const user = res.user;
+      dispatch(login(user));
     } catch (error) {
-      console.log(error.errorCode);
-      console.log(error.message);
-      checkerrorCode(error.code);
+      const errorCode = error.code;
+      console.log(errorCode);
+      const errorMessage = error.message;
+      toast.error(errorMessage);
     } finally {
-      if (!isCancelled) {
-        setIsPending(false);
-      }
+      // dispatch(setIsPending(false));
     }
   };
 
-  return { authenticateWithGoogle, isPending };
+  useEffect(() => {
+    return () => {
+      setIsCencel(true);
+    };
+  }, []);
+  return { authWithGoogle };
 }

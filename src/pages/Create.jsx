@@ -1,175 +1,169 @@
+import FormInput from "../components/FormInput";
+import { Form, useActionData, useNavigate } from "react-router-dom";
+import FormTextArea from "../components/FormTextArea";
 import Select from "react-select";
-import { useCollection } from "../hooks/useCollection";
+import makeAnimated from "react-select/animated";
 import { useEffect, useState } from "react";
-import { useGlobalContext } from "../hooks/useGlobalContext";
-import { Timestamp } from "firebase/firestore";
-import toast from "react-hot-toast";
 import { useFirestore } from "../hooks/useFirestore";
-import { useNavigate } from "react-router-dom";
+import { Timestamp } from "firebase/firestore";
+import { serverTimestamp } from "firebase/firestore";
+import toast from "react-hot-toast";
+import { useCollection } from "../hooks/useCollection";
 
-const categories = [
+const animatedComponents = makeAnimated();
+
+export async function action({ request }) {
+  const form = await request.formData();
+  const name = form.get("name");
+  const description = form.get("description");
+  const dueTo = form.get("dueTo")
+    ? Timestamp.fromDate(new Date(form.get("dueTo")))
+    : null;
+
+  return { name, description, dueTo };
+}
+
+const projectTypes = [
+  { value: "smm", label: "SMM" },
   { value: "frontend", label: "Frontend" },
   { value: "backend", label: "Backend" },
-  { value: "design", label: "Design" },
   { value: "marketing", label: "Marketing" },
-  { value: "others", label: "Others" },
+  { value: "mobilograf", label: "Mobilograf" },
 ];
 
 function Create() {
   const navigate = useNavigate();
-  const { addDocument, state } = useFirestore("projects");
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [dueDate, setDueDate] = useState("");
-  const [category, setCategory] = useState(null);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [commentsAccessOnlyAssignedUsers, setCommentsAccessOnlyAssignedUsers] =
-    useState(false);
-  const [onlyReadComments, setOnlyReadComments] = useState(false);
-
-  const { user } = useGlobalContext();
+  const { addDocument, isPending, error } = useFirestore("projects");
   const { documents } = useCollection("users");
+
+  const CreateActionData = useActionData();
+  const [assignedUsers, setAssignedUsers] = useState([]);
+  const [projectType, setProjectType] = useState([]);
   const [users, setUsers] = useState([]);
 
-  const handleUserSelect = (option) => {
-    setSelectedUser(option.map((user) => user.value));
+  useEffect(() => {
+    setUsers(
+      documents?.map((document) => {
+        return {
+          value: { ...document },
+          label: document.displayName,
+        };
+      })
+    );
+  }, [documents]);
+
+  const selectUser = (user) => {
+    setAssignedUsers(user);
   };
 
-  const hanldeCategorySelect = (option) => {
-    setCategory(option.value);
+  const selectProjectType = (type) => {
+    setProjectType(type);
+  };
+
+  const handleValidation = () => {
+    if (!CreateActionData?.name) {
+      toast.error("Project name is required!");
+      return false;
+    }
+    if (!CreateActionData?.description) {
+      toast.error("Project description is required!");
+      return false;
+    }
+    if (CreateActionData.description.length < 10) {
+      toast.error("Project description must be at least 10 characters!");
+      return false;
+    }
+    if (!CreateActionData?.dueTo) {
+      toast.error("Due date is required!");
+      return false;
+    }
+    if (assignedUsers.length === 0) {
+      toast.error("Please assign at least one user!");
+      return false;
+    }
+    if (projectType.length === 0) {
+      toast.error("Please select at least one project type!");
+      return false;
+    }
+    return true;
   };
 
   useEffect(() => {
-    const userOptions =
-      documents &&
-      documents.map((user) => ({
-        value: { id: user.id, ...user },
-        label: user.displayName,
-      }));
-    setUsers(userOptions);
-  }, [documents]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (
-      !title.trim() ||
-      !description.trim() ||
-      !dueDate.trim() ||
-      !category ||
-      !selectedUser
-    ) {
-      toast.error("Please fill in all fields");
-      return;
+    if (CreateActionData && handleValidation()) {
+      addDocument({
+        comments: [],
+        ...CreateActionData,
+        assignedUsers: assignedUsers.map((au) => au.value),
+        projectType: projectType.map((pt) => pt.value),
+        createdAt: serverTimestamp(new Date()),
+      });
+      navigate("/");
+      toast.success("Project created successfully!");
     }
-
-    const assignedUsersList =
-      selectedUser &&
-      selectedUser.map((user) => ({
-        displayName: user.displayName,
-        photoURL: user.photoURL,
-        id: user.id,
-      }));
-
-    const createdBy = {
-      id: user.uid,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-    };
-
-    const project = {
-      title,
-      description,
-      dueDate: Timestamp.fromDate(new Date(dueDate)),
-      category,
-      createdBy,
-      assignedUsersList,
-      comments: [],
-      commentsAccessOnlyAssignedUsers,
-      onlyReadComments,
-    };
-
-    await addDocument(project);
-    navigate("/");
-  };
+  }, [CreateActionData]);
 
   return (
-    <section>
-      <div className="align-elements">
-        <h1 className="mt-12 text-center text-xl font-semibold md:text-2xl lg:text-3xl">
-          Create a new Project
-        </h1>
-        <form onSubmit={handleSubmit} className="">
-          <label className="form-control w-full md:col-span-1">
-            <div className="label">
-              <span className="label-text ml-60">Title:*</span>
-            </div>
-            <input
-              onChange={(e) => setTitle(e.target.value)}
-              type="text"
-              placeholder="Type here"
-              className="input input-sm input-bordered  md:input-md w-80 ml-60"
-            />
-          </label>
-          {/* Description */}
-          <label className="form-control md:col-span-2 md:row-start-3 md:row-end-4">
-            <div className="label">
-              <span className="label-text ml-60">Description:*</span>
-            </div>
-            <textarea
-              onChange={(e) => setDescription(e.target.value)}
-              className="textarea textarea-bordered md:textarea-md w-80 ml-60"
-              placeholder="Type here"
-            ></textarea>
-          </label>
-          {/* Set  Due to */}
-          <label className="form-control w-full md:col-start-2 md:col-end-3 md:row-start-1">
-            <div className="label">
-              <span className="label-text ml-60">Set Due to:*</span>
-            </div>
-            <input
-              onChange={(e) => setDueDate(e.target.value)}
-              type="date"
-              placeholder="Type here"
-              className="input input-sm input-bordered  md:input-md w-80 ml-60"
-            />
-          </label>
-          {/* Category */}
-          <label className="form-control w-full">
-            <div className="label">
-              <span className="label-text ml-60">Category:*</span>
-            </div>
-            <Select
-              onChange={hanldeCategorySelect}
-              name="projectCategory"
-              options={categories}
-              className="react-select-container w-80 ml-60"
-              classNamePrefix="react-select"
-            />
-          </label>
-          {/* Assigned Users */}
-          <label className="form-control w-full">
-            <div className="label">
-              <span className="label-text ml-60">Select Users:*</span>
-            </div>
-            <Select
-              onChange={(option) => handleUserSelect(option)}
-              name="assignedUsers"
-              options={users}
-              className="react-select-container w-80 ml-60"
-              classNamePrefix="react-select"
-              isMulti
-            />
-          </label>
-          
-          <div className="create-btn">
-            <button className="btn btn-primary btn-sm w-full md:btn-md lg:btn-lg md:max-w-96 mt-12">
-              Create
+    <div className="flex flex-col items-center px-5">
+      <h2 className="text-4xl font-semibold text-center mb-10 text-teal-600 uppercase">
+        Create Your Project
+      </h2>
+      <Form
+        method="post"
+        className="flex flex-col gap-7 max-w-[700px] w-full justify-center bg-base-200 p-10 shadow-lg rounded-lg border border-gray-300"
+      >
+        <FormInput
+          name="name"
+          label="Project Name"
+          type="text"
+          placeholder="Enter project name here"
+        />
+        <FormTextArea label="Project Description" name="description" />
+        <FormInput label="Set Due Date" type="date" name="dueTo" />
+        <label className="form-control">
+          <div className="label">
+            <span className="label-text font-medium">Project Type:</span>
+          </div>
+          <Select
+            onChange={selectProjectType}
+            options={projectTypes}
+            isMulti
+            components={animatedComponents}
+          />
+        </label>
+        <label className="form-control">
+          <div className="label">
+            <span className="label-text font-medium ">Assign Users:</span>
+          </div>
+          <Select
+            onChange={selectUser}
+            options={users}
+            isMulti
+            components={animatedComponents}
+          />
+        </label>
+        {isPending && (
+          <div className="flex justify-end">
+            <button
+              className=" py-3 px-6 mt-8 bg-accent text-white rounded-lg font-semibold text-lg shadow-md hover:bg-purple-700 focus:ring-2 "
+              type="submit"
+              disabled
+            >
+              Loading...
             </button>
           </div>
-        </form>
-      </div>
-    </section>
+        )}
+        {!isPending && (
+          <div className="flex justify-end">
+            <button
+              className="py-3 px-6 mt-8 bg-accent  text-white rounded-lg font-semibold text-lg shadow-md hover:bg-purple-700 focus:ring-2 "
+              type="submit"
+            >
+              Add Project
+            </button>
+          </div>
+        )}
+      </Form>
+    </div>
   );
 }
 

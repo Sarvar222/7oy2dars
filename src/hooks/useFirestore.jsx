@@ -1,174 +1,111 @@
-import { useReducer, useEffect, useState } from "react";
 import {
-  collection,
   addDoc,
-  deleteDoc,
-  updateDoc,
-  setDoc,
+  collection,
   doc,
+  updateDoc,
+  deleteDoc,
 } from "firebase/firestore";
+
 import { db } from "../firebase/config";
 import toast from "react-hot-toast";
+import { useEffect, useReducer, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-let initialState = {
+const document = {
   document: null,
   isPending: false,
   error: null,
-  success: null,
+  secces: true,
 };
-
 const changeState = (state, action) => {
   const { type, payload } = action;
   switch (type) {
+    case "ADD_DOC":
+      return { document: payload, isPending: false, error: null, secces: true };
+    case "DELETE_DOC":
+      return { document: null, isPending: false, error: null, secces: true };
+    case "UPDATE_DOC":
+      return { document: payload, isPending: false, error: null, secces: true };
     case "IS_PENDING":
-      return {
-        document: null,
-        isPending: true,
-        error: null,
-        success: false,
-      };
-    case "ADDED_DOCUMENT":
-      return {
-        document: payload,
-        isPending: false,
-        error: null,
-        success: true,
-      };
-    case "DELETED_DOCUMENT":
+      return { document: null, isPending: payload, error: null, secces: false };
+    case "SUCCES":
       return {
         document: null,
         isPending: false,
         error: null,
-        success: true,
+        secces: true,
       };
     case "ERROR":
-      return {
-        document: null,
-        isPending: false,
-        error: payload,
-        success: false,
-      };
-    case "UPDATED_DOCUMENT":
-      return {
-        document: payload,
-        isPending: false,
-        error: null,
-        success: true,
-      };
+      return { document: null, isPending: false, error: payload, secces: true };
     default:
       return state;
   }
 };
 
-export function useFirestore(collectionName) {
-  const [state, dispatch] = useReducer(changeState, initialState);
-  const [isCancelled, setIsCancelled] = useState(false);
-
-  useEffect(() => {
-    return () => setIsCancelled(true);
-  }, []);
-
-  const dispatchIfNotCanceled = (action) => {
-    if (!isCancelled) {
+function useFirestore(collectionName) {
+  const [state, dispatch] = useReducer(changeState, document);
+  const navigate = useNavigate();
+  const [isCanceled, setIsCanceled] = useState(false);
+  const dispatchIsNotCanceled = (action) => {
+    if (!isCanceled) {
       dispatch(action);
     }
   };
 
-  const addDocument = async (document) => {
-    dispatch({ type: "IS_PENDING" });
-
+  const addDocument = async (data) => {
+    dispatchIsNotCanceled({ type: "IS_PENDING", payload: true });
     try {
-      const addedDocument = await addDoc(
-        collection(db, collectionName),
-        document,
-      );
-      dispatchIfNotCanceled({ type: "ADDED_DOCUMENT", payload: addedDocument });
-      toast.success("Added successfully");
+      let res = await addDoc(collection(db, collectionName), data);
+      toast.success("Project added");
+      dispatchIsNotCanceled({ type: "ADD_DOC", payload: res });
+      dispatchIsNotCanceled({ type: "SUCCES", payload: true });
     } catch (error) {
-      console.log(error);
-      dispatchIfNotCanceled({
-        type: "ERROR",
-        payload: error.message,
-      });
+      toast.error(error.code);
+      dispatchIsNotCanceled({ type: "ERROR", payload: error.code });
+      setError(error.code);
+    } finally {
+      dispatchIsNotCanceled({ type: "IS_PENDING", payload: false });
     }
   };
-
+  // delete documnets
   const deleteDocument = async (id) => {
-    dispatch({ type: "IS_PENDING" });
-
+    dispatchIsNotCanceled({ type: "IS_PENDING", payload: true });
     try {
       await deleteDoc(doc(db, collectionName, id));
-      dispatchIfNotCanceled({ type: "DELETED_DOCUMENT" });
-      toast.success("Deleted successfully");
+      toast.success("Document successfully deleted!");
+      navigate("/");
+
+      dispatchIsNotCanceled({ type: "SUCCES", payload: true });
     } catch (error) {
-      console.log(error);
-      dispatchIfNotCanceled({
-        type: "ERROR",
-        payload: error.message,
-      });
+      toast.error("Error removing document: ", error);
+      dispatchIsNotCanceled({ type: "ERROR", payload: error.code });
+    } finally {
+      dispatchIsNotCanceled({ type: "IS_PENDING", payload: false });
     }
   };
 
-  const updateDocument = async (id, document) => {
-    dispatch({ type: "IS_PENDING" });
-
+  // update documents
+  const updateDocument = async (document, id) => {
+    dispatch({ type: "IS_PENDING", payload: true });
     try {
-      const updatedDocument = await updateDoc(
-        doc(db, collectionName, id),
-        document,
-      );
-      dispatchIfNotCanceled({
-        type: "UPDATED_DOCUMENT",
-        payload: updatedDocument,
-      });
+      const docRef = doc(db, collectionName, id);
+      await updateDoc(docRef, document);
+      dispatchIsNotCanceled({ type: "ADD_DOC", payload: docRef });
+      dispatchIsNotCanceled({ type: "SUCCES", payload: true });
     } catch (error) {
-      console.log(error.message);
-      dispatchIfNotCanceled({
-        type: "ERROR",
-        payload: error.message,
-      });
+      dispatchIsNotCanceled({ type: "ERROR", payload: error.code });
+      toast.error(error.code);
+      console.log(error.code);
+    } finally {
+      dispatchIsNotCanceled({ type: "IS_PENDING", payload: false });
     }
   };
-
-  const addUserDocument = async (userDocument) => {
-    dispatch({ type: "IS_PENDING" });
-
-    const user = {
-      displayName: userDocument.displayName,
-      email: userDocument.email,
-      emailVerified: userDocument.emailVerified,
-      phoneNumber: userDocument.phoneNumber || false,
-      createdAt: userDocument.metadata.creationTime,
-      photoURL:
-        userDocument.photoURL ||
-        `https://api.dicebear.com/9.x/initials/svg?seed=${userDocument.diplayName}`,
-      coverURL: `https://api.dicebear.com/9.x/glass/svg?seed=${userDocument.uid}`,
-      online: true,
+  useEffect(() => {
+    return () => {
+      setIsCanceled(true);
     };
-
-    try {
-      const addedUserDocument = await setDoc(
-        doc(db, collectionName, userDocument.uid),
-        user,
-      );
-      dispatchIfNotCanceled({
-        type: "ADDED_DOCUMENT",
-        payload: addedUserDocument,
-      });
-    } catch (error) {
-      console.log(error);
-      dispatchIfNotCanceled({
-        type: "ERROR",
-        payload: error.message,
-      });
-    }
-  };
-
-  return {
-    addDocument,
-    deleteDocument,
-    updateDocument,
-    addUserDocument,
-    state,
-  };
+  }, []);
+  return { addDocument, deleteDocument, updateDocument, state };
 }
+
+export { useFirestore };
