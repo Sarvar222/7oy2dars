@@ -4,7 +4,7 @@ function Home() {
   const { documents } = useCollection("projects");
   return (
     <div className="flex flex-col items-center px-5">
-      <h1 className="text-4xl font-bold text-teal-600 mb-10">Dashboard</h1>
+      <h1 className="text-4xl font-semibold  text-green-600 mb-10">Dashboard</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-[1200px]">
         {documents &&
           documents.map((doc) => {
@@ -19,12 +19,10 @@ function Home() {
                     {doc.name}
                   </h2>
                   <p className="text-gray-600 mb-4">
-                    Due Date:{" "}
-                    <span className="font-medium text-teal-600">
+                    <span className="font-medium text-green-600">
                       {new Date(doc.dueTo.toDate()).toLocaleDateString()}
                     </span>
                   </p>
-                  <hr className="" />
                   <div className="avatar-group -space-x-6 rtl:space-x-reverse ">
                     {doc.assignedUsers.map((u) => {
                       return (

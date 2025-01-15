@@ -16,7 +16,7 @@ function ErrorPage() {
         <div className="text-center p-10 rounded-lg space-y-6">
           <Link
             to="/"
-            className="px-6 py-3 btn btn-secondary transition duration-300"
+            className="px-6 py-3 btn bg-green-600 transition duration-300"
           >
             Back to Home
           </Link>
@@ -26,12 +26,10 @@ function ErrorPage() {
   }
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="text-center p-10 rounded-lg space-y-6">
-        <h1 className="text-6xl font-bold text-red-500"> ooPs :(</h1>
-        <h2 className="text-3xl font-medium">Something went wrong !</h2>
+      <div className="text-center p-10 rounded-lg space-y-6">   
         <Link
           to="/"
-          className="px-6 py-3 btn btn-secondary transition duration-300"
+          className="px-6 py-3 btn bg-green-600 transition duration-300"
         >
           Back to Home
         </Link>

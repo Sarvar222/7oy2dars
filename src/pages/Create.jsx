@@ -104,7 +104,7 @@ function Create() {
 
   return (
     <div className="flex flex-col items-center px-5">
-      <h2 className="text-4xl font-semibold text-center mb-10 text-teal-600 uppercase">
+      <h2 className="text-4xl font-semibold text-center mb-10 text-green-600 uppercase">
         Create Your Project
       </h2>
       <Form
@@ -155,7 +155,7 @@ function Create() {
         {!isPending && (
           <div className="flex justify-end">
             <button
-              className="py-3 px-6 mt-8 bg-accent  text-white rounded-lg font-semibold text-lg shadow-md hover:bg-purple-700 focus:ring-2 "
+              className="py-3 px-6 mt-8 bg-green-600  text-white rounded-lg font-semibold text-lg shadow-md hover:bg-gray-700 focus:ring-2 "
               type="submit"
             >
               Add Project

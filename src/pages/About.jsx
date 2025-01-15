@@ -49,15 +49,16 @@ function About() {
     );
   }
   return (
-    <div className="grid lg:grid-cols-2 gap-5 p-4">
+    <div className="gap-5 p-4">
       {/* Project Info */}
-      <div className="bg-base-200   shadow-lg flex ">
+      <div className="bg-base-200   shadow-lg  ">
         <div className="card-body space-y-4">
-          <h2 className="card-title text-3xl font-semibold uppercase">
-            {document.name}
-          </h2>
-          <h3 className="text-xl italic ">{document.projectType}</h3>
-          <hr />
+          <div className="flex  ">
+            <h2 className="card-title text-3xl font-semibold uppercase">
+              {document.name}
+            </h2>
+            <h3 className="text-xl ml-96">{document.projectType}</h3>
+          </div>
           <p className="w-full p-4 bg-gray-200 text-black rounded-md mt-2">
             {document.description}
           </p>
@@ -80,7 +81,7 @@ function About() {
       </div>
 
       {/* Chat Section */}
-      <div className="flex flex-col gap-4 bg-base-200 p-4 rounded-md shadow-md justify-between">
+      <div className="flex flex-col gap-4 bg-base-200 p-4 rounded-md shadow-md justify-between mt-12">
         <h2 className="text-3xl font-semibold">Chat</h2>
         {document.comments.length === 0 ? (
           <p className="text-center my-10 italic text-gray-500">
@@ -121,8 +122,8 @@ function About() {
               placeholder="Type your message..."
             ></textarea>
           </div>
-          <button className="btn btn-outline btn-info btn-block mt-4 py-3 text-lg flex items-center gap-2">
-            Send <MdOutlineSend />
+          <button className="btn btn-outline  btn-block mt-4 py-3 text-lg flex items-center gap-2">
+            Send
           </button>
         </form>
       </div>

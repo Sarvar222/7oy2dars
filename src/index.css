@@ -9,3 +9,22 @@
 }
 /* bg-gradient-to-b from-slate-800 to-slate-600 */
 /* bg-gradient-to-b from-slate-300 to-slate-400 */
+/* Белая тема */
+[data-theme="white"] {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+}
+
+/* Чёрная тема */
+[data-theme="black"] {
+  --bg-color: #000000;
+  --text-color: #ffffff;
+}
+
+/* Применение переменных */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s; /* Плавный переход */
+}
+

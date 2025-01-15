@@ -4,10 +4,10 @@ function OnlineUsers() {
   const { documents } = useCollection("users");
 
   return (
-    <div className="bg-base-300 min-h-screen p-10 rounded-tl-2xl rounded-bl-2xl shadow-xl">
+    <div className="bg-gray-300 min-h-screen p-10  shadow-xl">
       <div className="w-[240px] mx-auto">
-        <h1 className="mb-8 text-center text-2xl font-bold tracking-wide">
-          Online Users
+        <h1 className="mb-8 text-2xl font-bold tracking-wide">
+          Online Users:
         </h1>
         <ul className="space-y-3">
           {documents &&
@@ -15,7 +15,7 @@ function OnlineUsers() {
               <li
                 key={doc.id}
                 className={`flex items-center gap-4 p-4 rounded-lg shadow-lg   ${
-                  doc.online ? " bg-accent" : "bg-warning"
+                  doc.online ? " bg-green-600" : "bg-warning"
                 }`}
               >
                 <div className="relative">
@@ -32,9 +32,6 @@ function OnlineUsers() {
                 </div>
                 <div className="flex flex-col">
                   <p className="text-lg font-semibold">{doc.displayName}</p>
-                  <p className="text-sm italic opacity-80">
-                    {doc.online ? "Currently:  Online" : "Currently: Offline"}
-                  </p>
                 </div>
               </li>
             ))}

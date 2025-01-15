@@ -8,7 +8,6 @@ import { useLogout } from "../hooks/useLogout";
 // icons
 import { IoAddCircleOutline } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
-import { FaProjectDiagram } from "react-icons/fa";
 import { GoProject } from "react-icons/go";
 import { useCollection } from "../hooks/useCollection";
 import Button from "./Button";
@@ -19,7 +18,7 @@ function UserNavbar() {
   const { documents } = useCollection("users");
   return (
     <div
-      className="bg-base-300 min-h-screen py-10 rounded-tr-2xl rounded-br-2xl text-base-content
+      className="bg-base-300 min-h-screen py-10 text-base-content
  flex flex-col shadow-lg"
     >
       <div className="w-[300px] mx-auto">
@@ -35,9 +34,9 @@ function UserNavbar() {
             <NavLink
               to="/"
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-2 rounded-lg text-lg transition-all duration-500 ${
+                `flex items-center gap-3 px-2 py-2 text-lg transition-all duration-500 ${
                   isActive
-                    ? " bg-accent text-white shadow-lg"
+                    ? " bg-green-600 text-white shadow-lg"
                     : "hover:bg-gray-400"
                 }`
               }
@@ -49,9 +48,9 @@ function UserNavbar() {
             <NavLink
               to="/create"
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-2 rounded-lg text-lg transition-all duration-500 ${
+                `flex items-center gap-3 px-2 py-2  text-lg transition-all duration-500 ${
                   isActive
-                    ? " bg-accent text-white shadow-lg"
+                    ? " bg-green-600 text-white shadow-lg"
                     : "hover:bg-gray-400"
                 }`
               }
@@ -63,9 +62,9 @@ function UserNavbar() {
             <NavLink
               to={`/settings`}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-2 rounded-lg text-lg transition-all duration-500 ${
+                `flex items-center gap-3 px-2 py-2  text-lg transition-all duration-500 ${
                   isActive
-                    ? " bg-accent text-white shadow-lg"
+                    ? " bg-green-600 text-white shadow-lg"
                     : "hover:bg-gray-300"
                 }`
               }
@@ -79,7 +78,7 @@ function UserNavbar() {
       {/* Logout Button */}
       <div className="mt-auto mx-auto w-full px-6">
         <Button
-          className="w-full py-3 mt-8 bg-accent text-white rounded-lg font-semibold text-lg shadow-md hover:bg-gray-700 focus:outline-none transition-all duration-300"
+          className="w-full py-3 mt-8 bg-green-600 text-white rounded-lg font-semibold text-lg shadow-md hover:bg-gray-700 focus:outline-none transition-all duration-300"
           onClick={logout}
         >
           Logout
