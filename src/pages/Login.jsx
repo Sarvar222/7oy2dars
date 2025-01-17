@@ -29,76 +29,54 @@ function Login() {
   useEffect(() => {
     if (loginActionData) {
       const { valid, errors } = validateSignupOrLoginData(loginActionData);
+      console.log(valid, errors);
 
       if (valid) {
-        const { email, password } = loginActionData;
+        const { displayName, email, password } = loginActionData;
         loginWithEmailAndPassword(email, password);
       } else {
         setError(errors);
       }
     }
   }, [loginActionData]);
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300">
-      <Form
-        method="post"
-        className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md"
-      >
-        <h2 className="text-3xl font-extrabold text-center text-blue-700 mb-8 uppercase">
-          Login
-        </h2>
+    <div className="h-screen grid place-items-center w-full bg-blue-200">
+      <Form method="post" className="max-w-96 mx-auto w-full bg-white px-7 rounded-2xl">
+        <h2 className="text-4xl font-bold text-center uppercase my-5">Login</h2>
 
         <FormInput
           type="email"
-          placeholder="Enter your email"
-          label="Email Address"
+          placeholder="Email"
+          label="Your  Email"
           name="email"
           error={error.email && "input-error"}
           errorText={error.email}
-          className="mb-5"
         />
         <FormInput
           type="password"
-          placeholder="Enter your password"
-          label="Password"
+          placeholder="Password"
+          label="Your Pasword"
           name="password"
           error={error.password && "input-error"}
           errorText={error.password}
-          className="mb-6"
         />
 
-        <div className="space-y-4">
+        <div className="my-5">
           {!isPending && (
-            <button
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-lg font-semibold rounded-lg shadow-lg transition duration-300"
-            >
+            <button className="btn bg-blue-200 text-white btn-block">
               Login
             </button>
           )}
-          {isPending && (
-            <button
-              className="w-full py-3 bg-blue-400 text-white text-lg font-semibold rounded-lg shadow-lg transition duration-300"
-              disabled
-            >
-              Loading...
-            </button>
-          )}
         </div>
-
-        <p className="text-center text-sm text-gray-600 mt-6">
-          Don’t have an account?{" "}
-          <Link
-            to="/register"
-            className="text-blue-600 hover:underline font-semibold"
-          >
-            Register
+        <p className="text-center text-x italic opacity-70">
+          if you don't have a accaunt ,
+          <Link className="link link-primary " to="/register">
+            REGISTER
           </Link>
         </p>
       </Form>
     </div>
   );
 }
-
 
 export default Login;

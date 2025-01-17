@@ -48,72 +48,59 @@ function Register() {
   }, [singupActionData]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 to-green-300">
-      <Form
-        method="post"
-        className="bg-white shadow-xl rounded-xl p-8 w-full max-w-lg"
-      >
-        <h2 className="text-4xl font-extrabold text-center text-green-700 mb-8">
-          Create an Account
+    <div className="h-screen grid place-items-center w-full bg-green-200">
+      <Form method="post" className="max-w-96 mx-auto w-full bg-white px-7 rounded-2xl">
+        <h2 className="text-4xl font-bold text-center uppercase my-5">
+          Register
         </h2>
         <FormInput
           type="text"
-          placeholder="Enter your name"
-          label="Full Name"
+          placeholder="Name"
+          label="Display Name"
           name="name"
           error={error.displayName && "input-error"}
           errorText={error.displayName}
-          className="mb-5"
         />
         <FormInput
           type="email"
-          placeholder="Enter your email"
-          label="Email Address"
+          placeholder="Email"
+          label="Your  Email"
           name="email"
           error={error.email && "input-error"}
           errorText={error.email}
-          className="mb-5"
         />
         <FormInput
           type="password"
-          placeholder="Enter your password"
-          label="Password"
+          placeholder="Password"
+          label="Your Pasword"
           name="password"
           error={error.password && "input-error"}
           errorText={error.password}
-          className="mb-5"
         />
         <FormInput
           type="password"
-          placeholder="Confirm your password"
-          label="Confirm Password"
+          placeholder="Password again"
+          label="Your Pasword again"
           name="repeadPassword"
           error={error.confirmPassword && "input-error"}
           errorText={error.confirmPassword}
-          className="mb-6"
         />
-        <div className="space-y-4">
-          <Button
-            loading={isPending}
-            className="w-full py-3 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold rounded-lg shadow-lg transition duration-300"
-          >
+        <div className="my-5 flex flex-col gap-3">
+          <Button loading={isPending} type="primary">
             Register
           </Button>
-          <button
-            type="button"
+          <a
             onClick={authWithGoogle}
-            className="w-full py-3 bg-white border border-gray-300 hover:border-gray-400 text-gray-700 font-medium rounded-lg shadow-md transition duration-300 flex items-center justify-center"
+            type="button"
+            className="btn bg-green-200 btn-block"
           >
-            <span className="mr-2">🌐</span> Sign up with Google
-          </button>
+            Google
+          </a>
         </div>
-        <p className="text-center text-sm text-gray-600 mt-6">
-          Already have an account?{" "}
-          <Link
-            to="/login"
-            className="text-green-600 hover:underline font-semibold"
-          >
-            Log In
+        <p className="text-center text-x italic opacity-70">
+          if you have a accaunt ,{" "}
+          <Link className="link link-primary " to="/login">
+            LOGIN
           </Link>
         </p>
       </Form>
