@@ -46,7 +46,7 @@ useEffect(()=>{
           <div className="flex flex-col text-right text-mutedBlue ">
             <span>{data.senderAddress.street}</span>
             <span>{data.senderAddress.city}</span>
-            <span>{data.senderAddress.postCode}}</span>
+            <span>{data.senderAddress.postCode}</span>
             <span>{data.senderAddress.country}</span>
           </div>
         </div>
