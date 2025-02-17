@@ -15,7 +15,7 @@ function SideBar() {
     }
   }, [darkMode]);
   return (
-    <div className="bg-darkSlate flex justify-between h-[103px] w-full  lg:h-screen lg:w-[103px] lg:rounded-br-3xl lg:rounded-tr-3xl  lg:flex lg:flex-col lg:justify-between">
+    <div className="#373B53 flex justify-between h-[103px] w-full  lg:h-screen lg:w-[103px] lg:rounded-br-3xl lg:rounded-tr-3xl  lg:flex lg:flex-col lg:justify-between">
       <img className="sidebar-top" src="../sidebar-top.png" alt="" />
       <div className="flex items-center gap-5 lg:flex lg:flex-col lg:gap-5 lg:items-center">
         <label className="swap swap-rotate">
