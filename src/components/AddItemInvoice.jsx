@@ -120,9 +120,9 @@ function AddItemInvoice() {
             aria-label="close sidebar"
             className="drawer-overlay"
           ></label>
-          <ul className="menu list-a text-base-content min-h-full w-[710px] p-0 dark:text-lightMist">
+          <ul className="menu list-a text-base-content min-h-full w-[710px] p-0 ">
             {/* Sidebar content here */}
-            <div className="max-w-3xl  list-a p-6 rounded-lg bg-lightMist dark:bg-midnightBlack  ">
+            <div className="max-w-3xl  list-a p-6 rounded-lg bg-lightMist  ">
               <h1 className="text-2xl font-bold mb-6 ">New Invoice</h1>
 
               {/* Bill From */}
